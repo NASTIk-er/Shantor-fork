@@ -1,6 +1,6 @@
 module.exports = {
 	config: {
-		name: "hvd",
+		name: "hentaivdo",
 		aliases: ["hvdo"],
 		version: "1.0",
 		author: "BaYjid",
@@ -8,7 +8,7 @@ module.exports = {
 		role: 0,
 		shortDescription: "get hentai video",
 		longDescription: "it will send hentai  video",
-		category: "𝟭𝟴+",
+		category: "18+",
 		guide: "{p}{n}hvdo",
 	},
 
@@ -18,7 +18,7 @@ module.exports = {
 		const senderID = event.senderID;
 
 		const loadingMessage = await message.reply({
-			body: "Loading random fuÇk v1d30... Please wait! upto 5min `ღ´🦋𝐃𝐈𝐃𝐀𝐑 𝐀𝐇𝐌𝐄𝐃🥂",
+			body: "𝗟𝗼𝗮𝗱𝗶𝗻𝗴 𝗿𝗮𝗻𝗱𝗼𝗺 𝗳𝘂𝗰𝗸 𝘃𝗶𝗱𝗲𝗼..... 𝗽𝗹𝗲𝗮𝘀𝗲 𝘄𝗮𝗶𝘁! 𝟭𝗺𝗶𝗻𝘁 `ღ´🦋𝗦𝗛𝗔𝗡𝗧𝗢 𝗕𝗕𝗭🥂",
 		});
 
 		const link = [
