@@ -13,7 +13,7 @@ async function fetchTikTokVideos(query) {
 
 module.exports = {
   config: {
-    name: "lyricvideo",
+    name: "lyric",
     aliases: [],
     author: "Vex_kshitiz",
     version: "1.0",
@@ -29,7 +29,7 @@ module.exports = {
     },
   },
   onStart: async function ({ api, event, args, message }) {
-    api.setMessageReaction("✨", event.messageID, (err) => {}, true);
+    api.setMessageReaction("🐥", event.messageID, (err) => {}, true);
 
     try {
       let query = '';
