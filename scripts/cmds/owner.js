@@ -4,7 +4,7 @@ const moment = require('moment-timezone');
 module.exports = {
 	config: {
 		name: "info",
-   aliases: ["owner", "botinfo" ],
+   aliases: ["owner", "shantor info", "botinfo" ],
 		version: "1.0",
 		author: "NTKhang",
 		countDown: 20,
@@ -16,14 +16,14 @@ module.exports = {
 		envConfig: {}
 	},
 	onStart: async function ({ message }) {
-		const authorName = "𝗠𝗿.𝗗𝗶𝗱𝗮𝗿";
+		const authorName = "𝗦𝗛𝗔𝗡𝗧𝗢.𝗔𝗛𝗠𝗘𝗗";
 		const ownAge = "19";
-		const messenger = " //https://m.me/100044855600383";
-		const authorFB = " //https://www.facebook.com/Didar.Einstein12";
-		const authorNumber = "013********94";
+		const messenger = " //https://m.me/61575107330152";
+		const authorFB = " //https://www.facebook.com/shanto.Einstein12";
+		const authorNumber = "01828500740";
 		const Status = "𝘀𝗶𝗻𝗴𝗹𝗲 ";
 		const urls = [
-"https://drive.google.com/uc?export=download&id=1ZFN18K6yyRarQ7Iaa-DFtRsA-c6WkSZD"
+"https://drive.google.com/uc?export=view&id=1tV5jhrLxkzukEzDyFkIscB1VBYv7g632"
 ];
 		const link = urls[Math.floor(Math.random() * urls.length)];
 		const now = moment().tz('Asia/Jakarta');
