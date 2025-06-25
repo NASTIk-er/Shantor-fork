@@ -1,6 +1,6 @@
 module.exports = {
   config: {
-    name: "love",
+    name: "bot love",
     role: 0,
     author: "Romim",
     countDown: 5,
