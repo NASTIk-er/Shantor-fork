@@ -30,7 +30,7 @@ module.exports = {
       "😁": "https://files.catbox.moe/q4vxo1.mp3",
       "😒": "https://files.catbox.moe/07bw5k.mp3",
       "😭": "https://files.catbox.moe/gsfpnj.mp3",
-      [prefix + "owner"]: "https://files.catbox.moe/q4vxo1.mp3"
+      [prefix + "owner"]: ""
     };
 
     // Check if the message is one of our triggers
