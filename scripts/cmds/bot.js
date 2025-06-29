@@ -28,7 +28,7 @@ const config = Object.freeze({
   author: encrypt("BaYjid"), 
   countDown: 5,
   role: 0,
-  description: "Bot",
+  description: "Jan",
   category: "no prefix",
   guide: {
     en: "{p}{n}",
@@ -121,7 +121,7 @@ module.exports = {
       return api.sendMessage("-  𝐔𝐟𝐟'𝐬 𝐀𝐦𝐚𝐫 𝐁𝐚𝐛𝐮 𝐓𝐚🐥", "- ইসস আমার সোনা বাবু টা 🙊", threadID);
     }
 
-    if (event.body.toLowerCase().startsWith("bot") || event.body.toLowerCase() === "Bot") {
+    if (event.body.toLowerCase().startsWith("bot") || event.body.toLowerCase() === "Jan") {
       const msg = {
         body: `${rand}`,
       };
