@@ -23,7 +23,7 @@ function decrypt(text) {
 
 
 const config = Object.freeze({
-  name: "bot",
+  name: "Jan",
   version: "1.0",
   author: encrypt("BaYjid"), 
   countDown: 5,
@@ -121,7 +121,7 @@ module.exports = {
       return api.sendMessage("-  𝐔𝐟𝐟'𝐬 𝐀𝐦𝐚𝐫 𝐁𝐚𝐛𝐮 𝐓𝐚🐥", "- ইসস আমার সোনা বাবু টা 🙊", threadID);
     }
 
-    if (event.body.toLowerCase().startsWith("bot") || event.body.toLowerCase() === "Jan") {
+    if (event.body.toLowerCase().startsWith("jan") || event.body.toLowerCase() === "Jan") {
       const msg = {
         body: `${rand}`,
       };
