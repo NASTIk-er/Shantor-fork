@@ -1,41 +1,69 @@
 const fs = require("fs");
+const axios = require("axios");
+
+const videoMap = {
+  "🥵": "https://files.catbox.moe/nja09a.mp4",
+  "👅": "https://files.catbox.moe/dty32d.mp4",
+  "👄": "https://files.catbox.moe/8z7vay.mp4",
+  "🫦": "https://files.catbox.moe/q0hrek.mp4",
+  "💋": "https://files.catbox.moe/03vl6j.mp4",
+  "😘": "https://files.catbox.moe/udwapn.mp4",
+  "😽": "https://files.catbox.moe/1i3l9u.mp4",
+  "🖕🏻": "https://files.catbox.moe/cactm7.mp4",
+  "🔥": "https://files.catbox.moe/epnqxz.mp4",
+  "Sexy": "https://files.catbox.moe/py03ij.mp4"
+};
+
+const messages = [
+  "I know you're enjoying these videos, baby 😏",
+  "How does this make you feel? 🥵",
+  "You like what you see, don't you? 💋",
+  "This is just for you, my naughty friend 😘",
+  "Don't get too excited now... or should you? 😈",
+  "Your secret is safe with me... enjoy! 😽",
+  "I know exactly what you need right now 😙",
+  "Feeling hot yet? Let me turn up the heat 🔥",
+  "You wanted this, didn't you? Bad girl/boy 😏",
+  "This video was made just for you, enjoy 😚"
+];
+
 module.exports = {
-  config:{
-  name: "pnx2",
-  version: "1.0.1",
-  premium: false,  
-  prefix: true,
-  role: 0,
-  author: "𝗦𝗛𝗔𝗡𝗧𝗢", 
-  description: "Fun",
-  category: "no prefix",
-  guide: "😒",
-        cooldowns: 5, 
-},
-
-onChat: async function({ api, event, client, __GLOBAL }) {
-  var { threadID, messageID } = event;
-  const content = event.body ? event.body : '';
-  const body = content.toLowerCase();
-  const axios = require('axios')
-  const NAYAN = ['https://files.catbox.moe/9y20cv.mp4','https://files.catbox.moe/a6qzh9.mp4','https://files.catbox.moe/7y129u.mp4','https://files.catbox.moe/2f16gy.mp4','https://files.catbox.moe/ngcvrh.mp4','https://files.catbox.moe/vqrlbg.mp4','https://files.catbox.moe/n2qe9k.mp4','https://files.catbox.moe/kkgf7l.mp4','https://files.catbox.moe/z5qlny.mp4','https://files.catbox.moe/cn52xm.mp4']
-    var rndm = NAYAN[Math.floor(Math.random() * NAYAN.length)];
-const media = (
-    await axios.get(
-      `${rndm}`,
-      { responseType: 'stream' }
-    )
-  ).data;
-
-  if (body.indexOf("🥵")==0 || body.indexOf("💋")==0 || body.indexOf("🫦")==0 || body.indexOf("👅")==0 || body.indexOf("👄")==0 || body.indexOf("🔥")==0 || body.indexOf("💦")==0 || body.indexOf("Hot")==0 || body.indexOf("horny")==0 || body.indexOf("18+")==0) {
-    var msg = {
-        body: "●❯────────────────❮●\n         -♦𝗦𝗔𝗡𝗧𝗢'𝗦-𝗕𝗔𝗕𝗬♦-         \n●❯────────────────❮●\n•┈✤⋆⃝🥵𝗟𝗨𝗖𝗖𝗔 𝗚𝗨𝗟𝗔 𝗦𝗢𝗥✤'⋆⃝💚😘\n●❯────────────────❮● ",
-        attachment: media
-      }
-      api.sendMessage( msg, threadID, messageID);
-    api.setMessageReaction("🖤", event.messageID, (err) => {}, true)
-    }
+  config: {
+    name: "pnx2",
+    version: "1.0.2",
+    premium: false,
+    prefix: true,
+    role: 0,
+    author: "𝗦𝗛𝗔𝗡𝗧𝗢",
+    description: "NSFW Videos",
+    category: "18+",
+    guide: "React with emoji to get videos",
+    cooldowns: 5,
   },
-  onStart: function({ nayan }) {
-  }
-                                                  }
+
+  onChat: async function({ api, event }) {
+    const { threadID, messageID, body } = event;
+    
+    if (videoMap[body]) {
+      try {
+        const media = (await axios.get(videoMap[body], { responseType: 'stream' })).data;
+        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+        
+        const msg = {
+          body: `♡━━━━━♡━━━━━━♡━━━━━♡
+ㅤ𓆰꯭ ꯭𝐒𝐇𝐀𝐍𝐓𝐎'𝐒 𝐐𝐔𝐀𝐋𝐋𝐈𝐓𝐘 ꯭𓆪
+ㅤ 𓆰꯭ ꯭𝐏𝐑𝐄𝐌𝐈𝐔𝐌 𝐂𝐎𝐍𝐓𝐄𝐍𝐓 ꯭𓆪
+♡━━━━━♡━━━━━━♡━━━━━♡`,
+          attachment: media
+        };
+        
+        await api.sendMessage(msg, threadID, messageID);
+        await api.setMessageReaction("💋", event.messageID, (err) => {}, true);
+      } catch (error) {
+        console.error("Error sending video:", error);
+        api.sendMessage("Oops, something went wrong while sending your video... try again later!", threadID, messageID);
+      }js   }
+  },
+  
+  onStart: function() {}
+};
