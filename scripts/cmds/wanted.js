@@ -5,13 +5,13 @@ module.exports = {
   config: {
     name: "wanted",
     version: "1.0",
-    author: "𝐀𝐒𝐈𝐅 𝐱𝟔𝟗",
+    author: "KSHITIZ",
     countDown: 1,
     role: 0,
-    shortDescription: "Wanted!",
+    shortDescription: "wanted poster",
     longDescription: "",
-    category: "box chat",
-    guide: "{pn} [mention|leave_blank]",
+    category: "meme",
+    guide: "{pn} {{[on | off]}}",
     envConfig: {
       deltaNext: 5
     }
@@ -19,36 +19,44 @@ module.exports = {
 
   langs: {
     vi: {
-      noTag: "Bạn phải tag người bạn muốn tát"
+      noTag: ""
     },
     en: {
       noTag: "You must tag the person you want to "
     }
   },
 
-  onStart: async function ({ event, message, usersData, args, getLang }) {
+  onStart: async function ({ event, message, usersData, args, getLang }) 
+  {
+
     let mention = Object.keys(event.mentions)
     let uid;
 
-    if (event.type == "message_reply") {
-      uid = event.messageReply.senderID
-    } else {
-      if (mention[0]) {
+  
+
+    if(event.type == "message_reply"){
+    uid = event.messageReply.senderID
+    } else{
+      if (mention[0]){
         uid = mention[0]
-      } else {
+      }else{
         console.log(" jsjsj")
-        uid = event.senderID
-      }
+        uid = event.senderID}
     }
 
-    let url = await usersData.getAvatarUrl(uid)
-    let avt = await new DIG.Wanted().getImage(url)
+let url = await usersData.getAvatarUrl(uid)
+let avt = await new DIG.Wanted().getImage(url)
 
-    const pathSave = `${__dirname}/tmp/wanted.png`;
-    fs.writeFileSync(pathSave, Buffer.from(avt));
-    // Send the image as a reply to the command message
-    message.reply({
-      attachment: fs.createReadStream(pathSave)
+
+ 
+      const pathSave = `${__dirname}/tmp/wanted.png`;
+  fs.writeFileSync(pathSave, Buffer.from(avt));
+    let body = "NEPAL KO WANTED MANXE"
+    if(!mention[0]) body="NEPAL KO WANTED MANXE"
+    message.reply({body:body,
+attachment: fs.createReadStream(pathSave)
     }, () => fs.unlinkSync(pathSave));
+
+
   }
 };
