@@ -12,9 +12,9 @@ const models = [
 
 module.exports = {
   config: {
-    name: "gen",
+    name: "imagine",
     version: "1.0",
-    author: "RedWan×MAHI×Sanam",
+    author: "JARiF@Cock",
     countDown: 5,
     role: 0,
     longDescription: {
@@ -64,7 +64,7 @@ module.exports = {
       }
 
       let id;
-      api.setMessageReaction("⏳", event.messageID, () => {}, false);
+      api.setMessageReaction("⏳", event.messageID, () => {}, true);
       const waitingMessage = await message.reply("✅ | Creating your Imagination...");
 
       const API = `https://www.api.vyturex.com/curios?prompt=${encodeURIComponent(prompt)}&modelType=${model}`;
@@ -73,10 +73,10 @@ module.exports = {
       await message.reply({
         attachment: imageStream,
       });
-      api.setMessageReaction("✅", event.messageID, () => {}, false);
+      api.setMessageReaction("✅", event.messageID, () => {}, true);
       await api.unsendMessage(waitingMessage.messageID);
     } catch (error) {
-      message.reply("Your prompt is blocked]");
+      message.reply("Your prompt is blocked. Try again later with another prompt. [ SAFETY-FILTER ]");
     }
   },
 };

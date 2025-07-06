@@ -1,73 +1,82 @@
-module.exports = {
-		config: {
-				name: "married",
-				aliases: ["mrd"],
-				version: "1.0",
-				author: "kivv",
-				countDown: 5,
-				role: 0,
-				shortDescription: "get a wife",
-				longDescription: "",
-				category: "married",
-				guide: "{@mention}"
-		}, 
+const fs = require("fs-extra");
+const path = require("path");
+const axios = require("axios");
+const jimp = require("jimp");
 
-		onLoad: async function () {
-				const { resolve } = require ("path");
-				const { existsSync, mkdirSync } = require ("fs-extra");
-				const { downloadFile } = global.utils;
-				const dirMaterial = __dirname + `/cache/canvas/`;
-				const path = resolve(__dirname, 'cache/canvas', 'marriedv5.png');
-				if (!existsSync(dirMaterial + "canvas")) mkdirSync(dirMaterial, { recursive: true });
-				if (!existsSync(path)) await downloadFile("https://i.ibb.co/mhxtgwm/49be174dafdc259030f70b1c57fa1c13.jpg", path);
-		},
+module.exports.config = {
+  name: "married",
+  version: "3.1.1",
+  role: 0,
+  author: "pok",
+  category: "img",
+  cooldowns: 5,
+};
 
-		circle: async function (image) {
-				const jimp = require("jimp");
-				image = await jimp.read(image);
-				image.circle();
-				return await image.getBufferAsync("image/png");
-		},
+module.exports.onLoad = async () => {
+  const dirMaterial = path.join(__dirname, "cache", "canvas");
+  const filePath = path.join(dirMaterial, "married.png");
+  const downloadFile = global.utils?.downloadFile;
 
-		makeImage: async function ({ one, two }) {
-				const fs = require ("fs-extra");
-				const path = require ("path");
-				const axios = require ("axios"); 
-				const jimp = require ("jimp");
-				const __root = path.resolve(__dirname, "cache", "canvas");
+  if (!fs.existsSync(dirMaterial)) fs.mkdirSync(dirMaterial, { recursive: true });
+  if (!fs.existsSync(filePath) && downloadFile) {
+    await downloadFile("https://i.ibb.co/PjWvsBr/13bb9bb05e53ee24893940892b411ad2.png", filePath);
+  }
+};
 
-				let batgiam_img = await jimp.read(__root + "/marriedv5.png");
-				let pathImg = __root + `/batman${one}_${two}.png`;
-				let avatarOne = __root + `/avt_${one}.png`;
-				let avatarTwo = __root + `/avt_${two}.png`;
+async function circle(image) {
+  image = await jimp.read(image);
+  image.circle();
+  return await image.getBufferAsync("image/png");
+}
 
-				let getAvatarOne = (await axios.get(`https://graph.facebook.com/${one}/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`, { responseType: 'arraybuffer' })).data;
-				fs.writeFileSync(avatarOne, Buffer.from(getAvatarOne, 'utf-8'));
+async function makeImage({ one, two }) {
+  const __root = path.resolve(__dirname, "cache", "canvas");
 
-				let getAvatarTwo = (await axios.get(`https://graph.facebook.com/${two}/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`, { responseType: 'arraybuffer' })).data;
-				fs.writeFileSync(avatarTwo, Buffer.from(getAvatarTwo, 'utf-8'));
+  let married_img = await jimp.read(path.join(__root, "married.png"));
+  let pathImg = path.join(__root, `married_${one}_${two}.png`);
+  let avatarOnePath = path.join(__root, `avt_${one}.png`);
+  let avatarTwoPath = path.join(__root, `avt_${two}.png`);
 
-				let circleOne = await jimp.read(await this.circle(avatarOne));
-				let circleTwo = await jimp.read(await this.circle(avatarTwo));
-				batgiam_img.composite(circleOne.resize(130, 130), 300, 150).composite(circleTwo.resize(130, 130), 170, 230);
+  let getAvatarOne = (await axios.get(`https://graph.facebook.com/${one}/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`, { responseType: 'arraybuffer' })).data;
+  fs.writeFileSync(avatarOnePath, Buffer.from(getAvatarOne, 'utf-8'));
 
-				let raw = await batgiam_img.getBufferAsync("image/png");
+  let getAvatarTwo = (await axios.get(`https://graph.facebook.com/${two}/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`, { responseType: 'arraybuffer' })).data;
+  fs.writeFileSync(avatarTwoPath, Buffer.from(getAvatarTwo, 'utf-8'));
 
-				fs.writeFileSync(pathImg, raw);
-				fs.unlinkSync(avatarOne);
-				fs.unlinkSync(avatarTwo);
+  let circleOne = await jimp.read(await circle(avatarOnePath));
+  let circleTwo = await jimp.read(await circle(avatarTwoPath));
+  married_img
+    .composite(circleOne.resize(90, 90), 210, 70)
+    .composite(circleTwo.resize(90, 90), 120, 90);
 
-				return pathImg;
-		},
+  let raw = await married_img.getBufferAsync("image/png");
+  fs.writeFileSync(pathImg, raw);
 
-		onStart: async function ({ event, api, args }) { 
-				const fs = require ("fs-extra");
-				const { threadID, messageID, senderID } = event;
-				const mention = Object.keys(event.mentions);
-				if (!mention[0]) return api.sendMessage("Please mention 1 person.", threadID, messageID);
-				else {
-						const one = senderID, two = mention[0];
-						return this.makeImage({ one, two }).then(path => api.sendMessage({ body: "", attachment: fs.createReadStream(path) }, threadID, () => fs.unlinkSync(path), messageID));
-				}
-		}
+  fs.unlinkSync(avatarOnePath);
+  fs.unlinkSync(avatarTwoPath);
+
+  return pathImg;
+}
+
+module.exports.onStart = async function ({ event, api, args }) {
+  const { threadID, messageID, senderID } = event;
+  const mention = Object.keys(event.mentions);
+
+  if (!mention[0]) {
+    return api.sendMessage("Please mention 1 person.", threadID, messageID);
+  } else {
+    const one = senderID;
+    const two = mention[0];
+
+    try {
+      const imagePath = await makeImage({ one, two });
+      api.sendMessage({
+        body: "'●❯────────────────❮●\n         -♦𝐓𝐀𝐍𝐕𝐈𝐑-𝐁𝐎𝐓♦-         \n●❯────────────────❮●\n-🦋🌻•\n\n•— সুন্দরি না হক বিশ্বাসি হক জিবন সঙ্গি__❤️‍🩹🫶🏻🥺\n\n-\n●❯────────────────❮●",
+        attachment: fs.createReadStream(imagePath)
+      }, threadID, () => fs.unlinkSync(imagePath), messageID);
+    } catch (err) {
+      console.error(err);
+      api.sendMessage("❌ কিছু একটা সমস্যা হয়েছে ছবি তৈরি করার সময়।", threadID, messageID);
+    }
+  }
 };
