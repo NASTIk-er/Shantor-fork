@@ -3,7 +3,7 @@ const axios = require("axios");
 module.exports = {
   config: {
     name: "4k",
-    aliases: ["hd"],
+    aliases: ["upscale"],
     version: "1.1",
     role: 0,
     author: "Team Calyx",

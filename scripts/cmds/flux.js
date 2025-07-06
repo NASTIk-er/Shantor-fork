@@ -3,44 +3,35 @@ const axios = require("axios");
 module.exports.config = {
   name: "flux",
   version: "2.0",
-  role: 0,
+  role: 2,
   author: "Dipto",
-  description: "Flux Image Generator",
-  category: "𝗜𝗠𝗔𝗚𝗘 𝗚𝗘𝗡𝗘𝗥𝗔𝗧𝗢𝗥",
-  premium: true,
+  description: "flux Image Generator",
+  category: "Image gen",
   guide: "{pn} [prompt] --ratio 1024x1024\n{pn} [prompt]",
   countDown: 15,
 };
 
-module.exports.onStart = async ({ event, args, api }) => {
-  const dipto = "https://www.noobs-api.rf.gd/dipto";
-
+module.exports.onStart = async ({ message, event, args, api }) => {
   try {
     const prompt = args.join(" ");
-    const [prompt2, ratio = "1:1"] = prompt.includes("--ratio")
-      ? prompt.split("--ratio").map(s => s.trim())
-      : [prompt, "1:1"];
+    const waitMsg = await message.reply('wait baby <😘');
+    api.setMessageReaction("⌛", event.messageID, () => {}, true);
 
-    const startTime = Date.now();
     
-    const waitMessage = await api.sendMessage("Generating image, please w8 🦆", event.threadID);
-    api.setMessageReaction("🆙", event.messageID, () => {}, true);
+    const response = await axios.get(`https://www.noobs-api.rf.gd/dipto/flux?prompt=${encodeURIComponent(prompt)}`, {
+      responseType: 'stream',
+    });
 
-    const apiurl = `${dipto}/flux?prompt=${encodeURIComponent(prompt2)}&ratio=${encodeURIComponent(ratio)}`;
-    const response = await axios.get(apiurl, { responseType: "stream" });
+    api.setMessageReaction("✅", event.messageID, () => {}, true);
+    message.unsend(waitMsg.messageID);
 
-    const timeTaken = ((Date.now() - startTime) / 1000).toFixed(2);
-
-    api.setMessageReaction("🦆", event.messageID, () => {}, true);
-    api.unsendMessage(waitMessage.messageID);
-
-    api.sendMessage({
-      body: `Here's your image (Generated in ${timeTaken} seconds)`,
+    await message.reply({
+      body: `Here's your image`,
       attachment: response.data,
-    }, event.threadID, event.messageID);
-    
+    });
+
   } catch (e) {
-    console.error(e);
-    api.sendMessage("Error: " + e.message, event.threadID, event.messageID);
+    console.log("Flux Error:", e);
+    message.reply("Error: " + e.message);
   }
 };

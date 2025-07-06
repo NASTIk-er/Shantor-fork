@@ -1,54 +1,52 @@
-const DIG = require("discord-image-generation");
-const fs = require("fs-extra");
+const fs = require('fs-extra');
+const axios = require('axios');
 
 module.exports = {
-  config: {
-    name: "clown",
-    version: "1.0",
-    author: "𝐀𝐒𝐈𝐅 𝐱𝟔𝟗",
-    countDown: 1,
-    role: 0,
-    shortDescription: "Clown Image!",
-    longDescription: "",
-    category: "fun",
-    guide: "{pn} [mention|leave_blank]",
-    envConfig: {
-      deltaNext: 5
-    }
-  },
+ config: {
+ name: "clown",
+ version: "1.0",
+ author: "kshitiz",
+ countDown: 5,
+ role: 0,
+ shortDescription: {
+ vi: "",
+ en: ""
+ },
+ longDescription: {
+ vi: "",
+ en: ""
+ },
+ category: "meme",
+ guide: ""
+ },
 
-  langs: {
-    vi: {
-      noTag: "Bạn phải tag người bạn muốn tát"
-    },
-    en: {
-      noTag: "You must tag the person you want to "
-    }
-  },
+ onStart: async function ({ api, event, args }) {
+ try {
+ var linkUp = event.messageReply.attachments[0]?.url || args.join(" ");
+ if (!linkUp) return api.sendMessage('Please reply to 1 image', event.threadID, event.messageID);
 
-  onStart: async function ({ event, message, usersData, args, getLang }) {
-    let mention = Object.keys(event.mentions)
-    let uid;
+ const res = await axios.get(`https://api-1.huytran6868.repl.co/imgur?link=${encodeURIComponent(linkUp)}`);
+ const link = res.data.uploaded.image;
 
-    if (event.type == "message_reply") {
-      uid = event.messageReply.senderID
-    } else {
-      if (mention[0]) {
-        uid = mention[0]
-      } else {
-        console.log(" jsjsj")
-        uid = event.senderID
-      }
-    }
+ const imgResponse = await axios.get(`https://api.popcat.xyz/clown?image=${link}`, { responseType: "arraybuffer" });
+ const imgBuffer = Buffer.from(imgResponse.data, "binary");
 
-    let url = await usersData.getAvatarUrl(uid)
-    let avt = await new DIG.Clown().getImage(url)
+ fs.writeFileSync('./cache/all.png', imgBuffer);
 
-    const pathSave = `${__dirname}/tmp/Clown.png`;
-    fs.writeFileSync(pathSave, Buffer.from(avt));
-    // Send the image as a reply to the command message
-    message.reply({
-      attachment: fs.createReadStream(pathSave)
-    }, () => fs.unlinkSync(pathSave));
-  }
+ const stream = fs.createReadStream('./cache/all.png');
+
+ api.sendMessage(
+ {
+ body: 'honk🤡',
+ attachment: stream,
+ },
+ event.threadID,
+ () => {
+ fs.unlinkSync('./cache/all.png');
+ }
+ );
+ } catch (e) {
+ return api.sendMessage(e.message, event.threadID, event.messageID);
+ }
+ }
 };
